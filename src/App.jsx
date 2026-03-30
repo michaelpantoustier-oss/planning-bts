@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react'
 import { MATIERES, FILIERES_ORDER, CAMPUS_OPTIONS } from './data/matieres.js'
 import {
-  loadResponses, saveResponse, deleteResponse, exportCSV, isSupabaseEnabled
+  loadResponses, saveResponse, deleteResponse, copyToSheets, isSupabaseEnabled
 } from './lib/storage.js'
 
 // ── PALETTE ──────────────────────────────────────────────────────
@@ -828,7 +828,7 @@ function AdminDashboard({ onLogout }) {
         </div>
         <div style={{ display:'flex', gap:8 }}>
           <Btn variant="ghost" onClick={refresh} style={{ padding:'.4rem .9rem', fontSize:'.8rem' }}>⟳ Actualiser</Btn>
-          <Btn variant="green"  onClick={()=>exportCSV(responses)} style={{ padding:'.4rem .9rem', fontSize:'.8rem' }}>📥 Export CSV</Btn>
+          <Btn variant="green"  onClick={()=>copyToSheets(responses)} style={{ padding:'.4rem .9rem', fontSize:'.8rem' }}>📋 Copier pour Google Sheets</Btn>
           <Btn variant="secondary" onClick={onLogout} style={{ padding:'.4rem .9rem', fontSize:'.8rem' }}>Déconnexion</Btn>
         </div>
       </div>
@@ -1083,7 +1083,7 @@ function Accueil({ onProf, onAdmin }) {
           <div style={{ fontSize:'2.5rem', marginBottom:'1rem' }}>🔒</div>
           <div style={{ fontWeight:700, fontSize:'1.05rem', marginBottom:'.4rem' }}>Administration</div>
           <div style={{ fontSize:'.83rem', color:C.textDim, marginBottom:'1.25rem', lineHeight:1.6 }}>
-            Consulter toutes les réponses, heatmap, export CSV
+            Consulter toutes les réponses, heatmap, export Google Sheets
           </div>
           <div style={{ padding:'.6rem 1.25rem', background:C.bg3,
             border:`1px solid ${C.border}`, borderRadius:10, color:C.textDim,

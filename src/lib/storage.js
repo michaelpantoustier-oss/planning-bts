@@ -90,13 +90,12 @@ export function isSupabaseEnabled() {
   return useSupabase
 }
 
-export function exportCSV(responses) {
+export async function copyToSheets(responses) {
   if (!responses.length) return alert('Aucune réponse à exporter.')
   const JOURS = ['lun','mar','mer','jeu','ven']
   const h = ['Nom','Prénom','Email','Filières','Matières','H/sem','Campus (priorité 1)',
     'Lun M','Lun APM','Mar M','Mar APM','Mer M','Mer APM','Jeu M','Jeu APM','Ven M','Ven APM',
     'Classes','Taux réussite cibles','Moyennes actuelles','Remarques','Soumis le']
-  const q = v => `"${String(v ?? '').replace(/"/g,'""')}"`
   const rows = responses.map(r => [
     r.nom, r.prenom, r.email,
     (r.filieres||[]).join(' | '),
@@ -109,11 +108,8 @@ export function exportCSV(responses) {
     (r.classes||[]).map(c=>c.moy).join(' | '),
     r.remarques || '',
     r.submittedAt ? new Date(r.submittedAt).toLocaleString('fr-FR') : '',
-  ].map(q).join(','))
-  const csv = '\ufeff' + [h.map(q).join(','), ...rows].join('\r\n')
-  const a = Object.assign(document.createElement('a'), {
-    href: URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'})),
-    download: `voeux_profs_${new Date().getFullYear()}.csv`
-  })
-  a.click()
+  ])
+  const tsv = [h, ...rows].map(row => row.join('\t')).join('\r\n')
+  await navigator.clipboard.writeText(tsv)
+  alert('✅ Données copiées ! Ouvre Google Sheets et colle avec Ctrl+V.')
 }
