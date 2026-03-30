@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react'
 import { MATIERES, FILIERES_ORDER, CAMPUS_OPTIONS } from './data/matieres.js'
 import {
-  loadResponses, saveResponse, deleteResponse, copyToSheets, isSupabaseEnabled
+  loadResponses, saveResponse, deleteResponse, copyToSheets, isSupabaseEnabled, exportLocalJSON, importJSONToSupabase
 } from './lib/storage.js'
 
 // ── PALETTE ──────────────────────────────────────────────────────
@@ -829,6 +829,18 @@ function AdminDashboard({ onLogout }) {
         <div style={{ display:'flex', gap:8 }}>
           <Btn variant="ghost" onClick={refresh} style={{ padding:'.4rem .9rem', fontSize:'.8rem' }}>⟳ Actualiser</Btn>
           <Btn variant="green"  onClick={()=>copyToSheets(responses)} style={{ padding:'.4rem .9rem', fontSize:'.8rem' }}>📋 Copier pour Google Sheets</Btn>
+          {!isSupabaseEnabled() && (
+            <Btn variant="secondary" onClick={exportLocalJSON} style={{ padding:'.4rem .9rem', fontSize:'.8rem' }}>📤 Exporter JSON</Btn>
+          )}
+          {isSupabaseEnabled() && (
+            <Btn variant="secondary" onClick={async()=>{
+              const json = prompt('Colle le JSON exporté depuis l\'ancien site :')
+              if (!json) return
+              const r = await importJSONToSupabase(json)
+              alert(r.msg)
+              refresh()
+            }} style={{ padding:'.4rem .9rem', fontSize:'.8rem' }}>📥 Importer JSON</Btn>
+          )}
           <Btn variant="secondary" onClick={onLogout} style={{ padding:'.4rem .9rem', fontSize:'.8rem' }}>Déconnexion</Btn>
         </div>
       </div>

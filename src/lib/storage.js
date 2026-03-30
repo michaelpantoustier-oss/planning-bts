@@ -90,6 +90,32 @@ export function isSupabaseEnabled() {
   return useSupabase
 }
 
+export async function exportLocalJSON() {
+  const local = localLoad()
+  if (!local.length) return alert('Aucune donnée locale à exporter.')
+  await navigator.clipboard.writeText(JSON.stringify(local, null, 2))
+  alert(`✅ ${local.length} réponse(s) copiée(s) en JSON.\nColle-les dans "Importer JSON" sur le nouveau site.`)
+}
+
+export async function importJSONToSupabase(jsonText) {
+  if (!useSupabase) return { ok: false, msg: 'Supabase non configuré sur ce site.' }
+  let records
+  try { records = JSON.parse(jsonText) }
+  catch { return { ok: false, msg: 'JSON invalide.' } }
+  if (!Array.isArray(records) || !records.length) return { ok: false, msg: 'Aucune donnée à importer.' }
+  let success = 0
+  for (const r of records) {
+    const { error } = await supabase.from('planning_responses').insert({
+      nom: r.nom, prenom: r.prenom, email: r.email,
+      filieres: r.filieres, matieres: r.matieres,
+      heures_hebdo: r.heuresHebdo, campus: r.campus,
+      dispo: r.dispo, classes: r.classes, remarques: r.remarques,
+    })
+    if (!error) success++
+  }
+  return { ok: true, msg: `✅ ${success}/${records.length} réponse(s) importée(s) dans Supabase.` }
+}
+
 export async function copyToSheets(responses) {
   if (!responses.length) return alert('Aucune réponse à exporter.')
   const JOURS = ['lun','mar','mer','jeu','ven']
