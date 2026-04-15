@@ -1,6 +1,7 @@
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+const apiKey = process.env.RESEND_API_KEY || process.env.VITE_RESEND_API_KEY
+const resend = new Resend(apiKey)
 
 const JOURS_LABEL = { lun:'Lundi', mar:'Mardi', mer:'Mercredi', jeu:'Jeudi', ven:'Vendredi' }
 const DISPO_LABEL = { dispo:'Disponible', demi:'Demi-journée', indispo:'Indisponible' }
