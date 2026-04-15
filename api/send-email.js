@@ -73,8 +73,8 @@ export default async function handler(req, res) {
   try {
     await resend.emails.send({
       from: 'Aurlom Éducation <onboarding@resend.dev>',
-      to: email,
-      subject: `Récapitulatif de vos vœux planning – ${prenom} ${nom}`,
+      to: 'michael.pantoustier@aurlom.com',
+      subject: `Nouveau vœux planning – ${prenom} ${nom}`,
       html,
     })
     res.status(200).json({ ok: true })
