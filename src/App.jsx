@@ -330,10 +330,11 @@ function Step3({ data, set, errors }) {
           </div>
 
           {/* Taux horaire */}
-          <div style={{ background:C.bg3, border:`1px solid ${C.border}`, borderRadius:13, padding:'1rem 1.1rem' }}>
+          <div style={{ background:C.bg3, border:`1px solid ${errors.tauxHoraire ? C.red : C.border}`, borderRadius:13, padding:'1rem 1.1rem' }}>
             <div style={{ fontSize:'.73rem', fontWeight:700, color:C.textDim, textTransform:'uppercase', marginBottom:8 }}>
-              Taux horaire 2024/25
+              Taux horaire 2024/25 <span style={{ color:C.red }}>*</span>
             </div>
+            {errors.tauxHoraire && <p style={{ fontSize:'.78rem', color:C.red, margin:'0 0 6px' }}>{errors.tauxHoraire}</p>}
             <div style={{ display:'flex', alignItems:'center', gap:10 }}>
               <input
                 type="number" value={data.tauxHoraire} min={0}
@@ -597,6 +598,7 @@ function ProfForm({ onComplete }) {
     }
     if (step === 3) {
       if (!form.campus.length) e.campus = 'Sélectionnez au moins un campus'
+      if (!form.tauxHoraire)   e.tauxHoraire = 'Le taux horaire est requis'
     }
     setErrors(e)
     return !Object.keys(e).length
