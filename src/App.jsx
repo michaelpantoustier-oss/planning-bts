@@ -608,6 +608,11 @@ function ProfForm({ onComplete }) {
     setSubmitting(true)
     try {
       await saveResponse(form)
+      fetch('/api/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      }).catch(() => {})
       onComplete(form)
     } catch(err) {
       console.error('Erreur lors de la sauvegarde:', err)
@@ -702,8 +707,7 @@ function Confirmation({ data, onNew }) {
           Vœux enregistrés — merci !
         </h2>
         <p style={{ color:C.textDim, fontSize:'.9rem', marginBottom:'1.5rem' }}>
-          Un récapitulatif a été envoyé à{' '}
-          <strong style={{ color:C.text }}>{data.email}</strong>
+          Vos vœux ont bien été enregistrés.
         </p>
         <div style={{ background:C.bg2, border:`1px solid ${C.border}`, borderRadius:14,
           padding:'1.25rem', marginBottom:'1.5rem', textAlign:'left' }}>
@@ -1062,7 +1066,7 @@ function Accueil({ onProf, onAdmin }) {
         </h1>
         <p style={{ color:C.textDim, maxWidth:480, margin:'0 auto',
           fontSize:'.95rem', lineHeight:1.7 }}>
-          Filières : BTS BM · OL · FED C · Prothèse · BIOALC · ABM<br/>
+          Filières : BTS BM · OL · FED C · Prothèse · BIOALC<br/>
           Disponibilités, matières, campus et objectifs pédagogiques
         </p>
       </div>
